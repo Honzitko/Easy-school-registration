@@ -204,6 +204,14 @@ class ESR_Ajax_Worker {
 		}
 
                // Validate course ID
+               if ( $new_course_id <= 0 ) {
+                       return [
+                               'error' => [
+                                       'course' => sprintf( __( 'Course %d does not exist', 'easy-school-registration' ), $new_course_id )
+                               ]
+                       ];
+               }
+
                $new_course_data = ESR()->course->get_course_data( $new_course_id );
 
                if ( ! $new_course_data ) {
