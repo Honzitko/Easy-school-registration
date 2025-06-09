@@ -203,14 +203,16 @@ class ESR_Ajax_Worker {
 			];
 		}
 
-		//TODO: check course_id exists
-		if ( ! $new_course_id || ( $new_course_id < 0 ) ) {
-			return [
-				'error' => [
-					'course' => __( 'Course ' . $new_course_id . ' does not exist', 'easy-school-registration' )
-				]
-			];
-		}
+               // Validate course ID
+               $new_course_data = ESR()->course->get_course_data( $new_course_id );
+
+               if ( ! $new_course_data ) {
+                       return [
+                               'error' => [
+                                       'course' => sprintf( __( 'Course %d does not exist', 'easy-school-registration' ), $new_course_id )
+                               ]
+                       ];
+               }
 
 		if ($course_new_is_solo) {
 			$new_dancing_as = ESR_Dancing_As::SOLO;
