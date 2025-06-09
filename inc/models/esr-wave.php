@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 // Exit if accessed directly.
 if (!defined('ABSPATH')) {
@@ -24,9 +25,11 @@ class ESR_Wave {
 	/**
 	 * @return array
 	 */
-	public function get_waves_to_process_ids() {
-		global $wpdb;
-		$results = $wpdb->get_results("SELECT id FROM {$wpdb->prefix}esr_wave_data AS wd WHERE NOT wd.is_passed");
+       public function get_waves_to_process_ids(): array {
+               global $wpdb;
+               $results = $wpdb->get_results(
+                       $wpdb->prepare("SELECT id FROM {$wpdb->prefix}esr_wave_data AS wd WHERE NOT wd.is_passed", [])
+               );
 
 		return $this->get_waves_ids_as_array($results);
 	}
@@ -35,7 +38,7 @@ class ESR_Wave {
 	/**
 	 * @return array
 	 */
-	public function get_all_waves_ids() {
+       public function get_all_waves_ids(): array {
 		return $this->get_waves_ids_as_array($this->get_waves_data());
 	}
 
@@ -45,7 +48,7 @@ class ESR_Wave {
 	 *
 	 * @return object
 	 */
-	public function get_wave_data($wave_id) {
+       public function get_wave_data(int $wave_id) {
 		global $wpdb;
 		return $wpdb->get_row($wpdb->prepare("SELECT * FROM {$wpdb->prefix}esr_wave_data WHERE id = %s", [$wave_id]));
 	}
@@ -54,9 +57,11 @@ class ESR_Wave {
 	/**
 	 * @return array
 	 */
-	public function get_waves_data($as_array = false) {
-		global $wpdb;
-		$data = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}esr_wave_data ORDER BY id DESC");
+       public function get_waves_data($as_array = false) {
+               global $wpdb;
+               $data = $wpdb->get_results(
+                       $wpdb->prepare("SELECT * FROM {$wpdb->prefix}esr_wave_data ORDER BY id DESC", [])
+               );
 
 		if (!$as_array) {
 			return $data;
@@ -70,9 +75,11 @@ class ESR_Wave {
 	 *
 	 * @return object
 	 */
-	public function esr_get_active_waves_data() {
-		global $wpdb;
-		return $wpdb->get_results("SELECT * FROM {$wpdb->prefix}esr_wave_data WHERE NOT is_passed");
+       public function esr_get_active_waves_data(): array {
+               global $wpdb;
+               return $wpdb->get_results(
+                       $wpdb->prepare("SELECT * FROM {$wpdb->prefix}esr_wave_data WHERE NOT is_passed", [])
+               );
 	}
 
 
@@ -80,7 +87,7 @@ class ESR_Wave {
 	 *
 	 * @return object
 	 */
-	public function esr_get_waves_with_active_registration() {
+       public function esr_get_waves_with_active_registration(): array {
 		global $wpdb;
 		$current_time = current_time('Y-m-d H:i:s');
 		return $wpdb->get_results($wpdb->prepare("SELECT * FROM {$wpdb->prefix}esr_wave_data WHERE registration_from <= %s AND registration_to >= %s AND NOT is_passed", [$current_time, $current_time]));
@@ -92,7 +99,7 @@ class ESR_Wave {
 	 *
 	 * @return bool
 	 */
-	public function is_wave_registration_active($wave_id) {
+       public function is_wave_registration_active(int $wave_id): bool {
 		$data         = $this->get_wave_data($wave_id);
 		$current_time = current_time('Y-m-d H:i:s');
 
@@ -106,7 +113,7 @@ class ESR_Wave {
 	 *
 	 * @return bool
 	 */
-	public function is_wave_registration_closed($wave_id) {
+       public function is_wave_registration_closed(int $wave_id): bool {
 		$data         = $this->get_wave_data($wave_id);
 		$current_time = current_time('Y-m-d H:i:s');
 
@@ -138,7 +145,7 @@ class ESR_Wave {
 	 *
 	 * @return bool
 	 */
-	public function is_wave_registration_not_opened_yet($wave_id) {
+       public function is_wave_registration_not_opened_yet(int $wave_id): bool {
 		$data         = $this->get_wave_data($wave_id);
 		$current_time = current_time('Y-m-d H:i:s');
 
@@ -151,7 +158,7 @@ class ESR_Wave {
 	 *
 	 * @return array
 	 */
-	private function get_waves_ids_as_array($results) {
+       private function get_waves_ids_as_array(array $results): array {
 		$waves = [];
 		foreach ($results as $result) {
 			$waves[$result->id] = $result->id;
@@ -166,7 +173,7 @@ class ESR_Wave {
 	 *
 	 * @return array
 	 */
-	private function get_waves_as_array($results) {
+       private function get_waves_as_array(array $results): array {
 		$waves = [];
 		foreach ($results as $result) {
 			$waves[$result->id] = $result;
@@ -179,13 +186,15 @@ class ESR_Wave {
 	/**
 	 * @return array|null|object
 	 */
-	public function esr_load_tinymce_events() {
+       public function esr_load_tinymce_events(): array {
 		global $wpdb;
 
-		return $wpdb->get_results("SELECT title AS text, id AS value FROM {$wpdb->prefix}esr_wave_data ORDER BY id DESC");
+               return $wpdb->get_results(
+                       $wpdb->prepare("SELECT title AS text, id AS value FROM {$wpdb->prefix}esr_wave_data ORDER BY id DESC", [])
+               );
 	}
 
-	public function esr_can_be_removed($wave_id) {
+       public function esr_can_be_removed(int $wave_id): bool {
 		global $wpdb;
 
 		return intval($wpdb->get_var($wpdb->prepare("SELECT 1 FROM {$wpdb->prefix}esr_wave_data AS w WHERE w.id = %d AND NOT EXISTS (SELECT * FROM {$wpdb->prefix}esr_course_data WHERE wave_id = w.id) AND NOT EXISTS (SELECT * FROM {$wpdb->prefix}esr_user_payment WHERE wave_id = w.id)", intval($wave_id)))) === 1;
