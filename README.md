@@ -2,6 +2,11 @@
 
 Changelog
 -------
+3.9.0 - 09.06.2025
+
+- Update: Improve PHP 8.1 compatibility
+- Fix: Validate course ID when changing registrations
+
 3.8.9 - 16.10.2020
 
 - New: Option to hide note in registrations
