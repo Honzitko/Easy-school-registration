@@ -187,30 +187,40 @@ class ESR_Ajax_Worker {
 		$course_old_is_solo = ESR()->course->is_course_solo( $old_course_id );
 		$course_new_is_solo = ESR()->course->is_course_solo( $new_course_id );
 
-		if ( ! $student ) {
-			return [
-				'error' => [
-					'student' => __( 'Student with this email do not exist', 'easy-school-registration' )
-				]
-			];
-		}
+               if ( ! $student ) {
+                       return [
+                               'error' => [
+                                       'student' => __( 'Student with this email does not exist', 'easy-school-registration' )
+                               ]
+                       ];
+               }
 
-		if ( ( trim( $data['partner_email'] ) !== '' ) && ! $partner ) {
-			return [
-				'error' => [
-					'partner' => __( 'Partner with this email do not exist', 'easy-school-registration' )
-				]
-			];
-		}
+               if ( ( trim( $data['partner_email'] ) !== '' ) && ! $partner ) {
+                       return [
+                               'error' => [
+                                       'partner' => __( 'Partner with this email does not exist', 'easy-school-registration' )
+                               ]
+                       ];
+               }
 
-		//TODO: check course_id exists
-		if ( ! $new_course_id || ( $new_course_id < 0 ) ) {
-			return [
-				'error' => [
-					'course' => __( 'Course ' . $new_course_id . ' does not exist', 'easy-school-registration' )
-				]
-			];
-		}
+               // Validate course ID
+               if ( $new_course_id <= 0 ) {
+                       return [
+                               'error' => [
+                                       'course' => sprintf( __( 'Course %d does not exist', 'easy-school-registration' ), $new_course_id )
+                               ]
+                       ];
+               }
+
+               $new_course_data = ESR()->course->get_course_data( $new_course_id );
+
+               if ( ! $new_course_data ) {
+                       return [
+                               'error' => [
+                                       'course' => sprintf( __( 'Course %d does not exist', 'easy-school-registration' ), $new_course_id )
+                               ]
+                       ];
+               }
 
 		if ($course_new_is_solo) {
 			$new_dancing_as = ESR_Dancing_As::SOLO;
@@ -503,13 +513,13 @@ class ESR_Ajax_Worker {
 			$student = get_user_by( 'email', $user_email );
 			$price   = null;
 
-			if ( ! $student ) {
-				return [
-					'error' => [
-						'student' => __( 'Student with this email do not exist', 'easy-school-registration' )
-					]
-				];
-			}
+                       if ( ! $student ) {
+                               return [
+                                       'error' => [
+                                               'student' => __( 'Student with this email does not exist', 'easy-school-registration' )
+                                       ]
+                               ];
+                       }
 
 			if ( ( $payment_status === 'paid' ) && isset( $data['payment'] ) ) {
 				$price = ! empty( $data['payment'] ) ? $data['payment'] : 0;
