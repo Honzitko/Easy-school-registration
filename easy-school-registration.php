@@ -5,10 +5,10 @@ declare(strict_types=1);
  * Plugin URI:      https://easyschoolregistration.com/
  * Description:     Tools to help you run your school better
  *
- * Version:         3.9.0
+ * Version:         3.9.2
  * Requires at least: 5.0
  * Requires PHP:    7.4
- * Tested up to:    5.2.2
+ * Tested up to:    6.5
  *
  * Author:          Zbyněk Nedoma
  * Author URI:      https://domaneni.cz
@@ -273,7 +273,7 @@ if ( ! class_exists( 'Easy_School_Registration' ) ) {
 
 		private function setup_constants() {
 			define( 'ESR_SLUG', 'esr' );
-                        define( 'ESR_VERSION', '3.9.0' );
+                       define( 'ESR_VERSION', '3.9.2' );
 			// Plugin Root File.
 			if ( ! defined( 'ESR_PLUGIN_FILE' ) ) {
 				define( 'ESR_PLUGIN_FILE', __FILE__ );

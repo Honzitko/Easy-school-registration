@@ -2,8 +2,9 @@
 
 Changelog
 -------
-3.9.1 - 10.06.2025
+3.9.2 - 10.06.2025
 
+- Fix: Tidy uninstall script and standardize formatting
 - Fix: Correct local translation path
 - Update: Add PHP and WP version headers
 
