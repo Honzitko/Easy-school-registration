@@ -2,6 +2,11 @@
 
 Changelog
 -------
+3.9.1 - 10.06.2025
+
+- Fix: Correct local translation path
+- Update: Add PHP and WP version headers
+
 3.9.0 - 09.06.2025
 
 - Update: Improve PHP 8.1 compatibility
