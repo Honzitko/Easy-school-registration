@@ -1,10 +1,10 @@
 <?php
 
-require dirname(__FILE__) . '/inc/database/esr-database.class.php';
-require dirname(__FILE__) . '/inc/enums/esr-role.enum.php';
+require __DIR__ . '/inc/database/esr-database.class.php';
+require __DIR__ . '/inc/enums/esr-role.enum.php';
 
-if (!defined('WP_UNINSTALL_PLUGIN')) {
-	exit('MEHEHE');
+if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
+        exit;
 }
 
 $database = new ESR_Database();

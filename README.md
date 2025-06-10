@@ -2,6 +2,17 @@
 
 Changelog
 -------
+3.9.3 - 10.06.2025
+
+- Fix: Use plugin file constant for translation path
+- Update: Standardize ABSPATH checks
+
+3.9.2 - 10.06.2025
+
+- Fix: Tidy uninstall script and standardize formatting
+- Fix: Correct local translation path
+- Update: Add PHP and WP version headers
+
 3.9.0 - 09.06.2025
 
 - Update: Improve PHP 8.1 compatibility
