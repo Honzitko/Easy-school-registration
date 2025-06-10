@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 // Exit if accessed directly.
 if (!defined('ABSPATH')) {
@@ -7,20 +8,24 @@ if (!defined('ABSPATH')) {
 
 class ESR_Log {
 
-	public function esr_get_all_logs() {
-		global $wpdb;
+       public function esr_get_all_logs(): array {
+               global $wpdb;
 
-		return $wpdb->get_results("SELECT * FROM {$wpdb->prefix}esr_log");
-	}
+               return (array) $wpdb->get_results(
+                       $wpdb->prepare("SELECT * FROM {$wpdb->prefix}esr_log", [])
+               );
+       }
 
-	public function esr_get_logs_by_subtype($subtype) {
-		global $wpdb;
+       public function esr_get_logs_by_subtype(string $subtype): array {
+               global $wpdb;
 
-		return $wpdb->get_results($wpdb->prepare("SELECT * FROM {$wpdb->prefix}esr_log WHERE subtype = %s", $subtype));
-	}
+               return (array) $wpdb->get_results(
+                       $wpdb->prepare("SELECT * FROM {$wpdb->prefix}esr_log WHERE subtype = %s", $subtype)
+               );
+       }
 
-	public static function esr_log_message($system, $subtype, $status, $message) {
-		global $wpdb;
+       public static function esr_log_message(string $system, string $subtype, string $status, string $message): void {
+               global $wpdb;
 
 		if (intval(ESR()->settings->esr_get_option('log_enabled', -1)) !== -1) {
 			$wpdb->insert($wpdb->prefix . 'esr_log', [
@@ -34,9 +39,9 @@ class ESR_Log {
 	}
 
 
-	public static function esr_log_esr_message($subtype, $status, $message) {
-		do_action('esr_log_message', 'easy_school_registration', $subtype, $status, $message);
-	}
+       public static function esr_log_esr_message(string $subtype, string $status, string $message): void {
+               do_action('esr_log_message', 'easy_school_registration', $subtype, $status, $message);
+       }
 
 }
 

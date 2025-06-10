@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Plugin Name:     Easy School Registration
  * Plugin URI:      https://easyschoolregistration.com/

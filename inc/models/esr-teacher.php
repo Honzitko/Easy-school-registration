@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 // Exit if accessed directly.
 if (!defined('ABSPATH')) {
@@ -11,7 +12,7 @@ class ESR_Teacher {
 	/**
 	 * @codeCoverageIgnore
 	 */
-	public function esr_get_teacher_settings_preferences() {
+       public function esr_get_teacher_settings_preferences(): array {
 		return [
 			'limit_registrations' => [
 				'type' => 'checkbox'
@@ -23,10 +24,12 @@ class ESR_Teacher {
 	/**
 	 * @return array|null|object
 	 */
-	public function get_teachers_data() {
+       public function get_teachers_data(): array {
 		global $wpdb;
 
-		$results = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}esr_teacher_data ORDER BY id");
+               $results = $wpdb->get_results(
+                       $wpdb->prepare("SELECT * FROM {$wpdb->prefix}esr_teacher_data ORDER BY id", [])
+               );
 
 		$teachers = [];
 		if ($results) {
@@ -44,7 +47,7 @@ class ESR_Teacher {
 	 *
 	 * @return object
 	 */
-	public function get_teacher_data($id) {
+       public function get_teacher_data(int $id) {
 		global $wpdb;
 		$result = $wpdb->get_row($wpdb->prepare("SELECT * FROM {$wpdb->prefix}esr_teacher_data WHERE id = %d", [$id]));
 
@@ -56,7 +59,7 @@ class ESR_Teacher {
 	}
 
 
-	public function get_teacher_data_by_user($user_id) {
+       public function get_teacher_data_by_user(int $user_id) {
 		global $wpdb;
 		$result = $wpdb->get_row($wpdb->prepare("SELECT * FROM {$wpdb->prefix}esr_teacher_data WHERE user_id = %d", [$user_id]));
 
@@ -68,7 +71,7 @@ class ESR_Teacher {
 	}
 
 
-	public function get_teacher_name($id) {
+       public function get_teacher_name(int $id): string {
 		$teacher = $this->get_teacher_data($id);
 
 		if ($teacher) {
@@ -89,12 +92,12 @@ class ESR_Teacher {
 	 *
 	 * @return string
 	 */
-	public function get_teachers_names($teacher_first, $teacher_second) {
+       public function get_teachers_names(int $teacher_first, ?int $teacher_second): string {
 		return ($teacher_first ? $this->get_teacher_name($teacher_first) : '') . ($teacher_second ? ($teacher_first && $teacher_second ? ' & ' : '') . $this->get_teacher_name($teacher_second) : '');
 	}
 
 
-	private function esr_prepare_teacher_settings($result) {
+       private function esr_prepare_teacher_settings($result): object {
 		if (isset($result->teacher_settings)) {
 			$settings = $result->teacher_settings;
 			unset($result->teacher_settings);
@@ -106,7 +109,7 @@ class ESR_Teacher {
 	}
 
 
-	public function esr_is_user_teacher($user_id) {
+       public function esr_is_user_teacher(int $user_id): bool {
 		global $wpdb;
 		return intval($wpdb->get_var($wpdb->prepare("SELECT EXISTS (SELECT 1 FROM {$wpdb->prefix}esr_teacher_data WHERE user_id = %d)", [$user_id]))) === 1;
 	}
